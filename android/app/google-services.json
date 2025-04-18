@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "768437411838",
+    "project_id": "fir-intro-c58bc",
+    "storage_bucket": "fir-intro-c58bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768437411838:android:7704d98832c64c5a642aaf",
+        "android_client_info": {
+          "package_name": "com.example.firebase_intro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768437411838-dsanh9o1r6ua30paur3j0oeccpbumgap.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.firebase_intro",
+            "certificate_hash": "74cc581a899aa28fa253e810c307ac989b1a7c78"
+          }
+        },
+        {
+          "client_id": "768437411838-epc8mr2aihljpgk5p0bp9db2rljt9230.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxYmbtnmUAJDe0yNXUqA3XAWk1bZqioRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768437411838-epc8mr2aihljpgk5p0bp9db2rljt9230.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "768437411838-e7m36qfv8pjqr9sdc12ldhus6dnnrr7n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.firebaseIntro"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768437411838:android:b718fe6269ae1d6f642aaf",
+        "android_client_info": {
+          "package_name": "com.example.flutter_music_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768437411838-epc8mr2aihljpgk5p0bp9db2rljt9230.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxYmbtnmUAJDe0yNXUqA3XAWk1bZqioRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768437411838-epc8mr2aihljpgk5p0bp9db2rljt9230.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "768437411838-e7m36qfv8pjqr9sdc12ldhus6dnnrr7n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.firebaseIntro"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
