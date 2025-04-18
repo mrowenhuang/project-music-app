@@ -1,0 +1,19 @@
+part of 'playing_cubit.dart';
+
+sealed class PlayingState extends Equatable {
+  const PlayingState();
+
+  @override
+  List<Object> get props => [];
+}
+
+final class PlayingInitial extends PlayingState {}
+
+final class MusicPlayingNowState extends PlayingState {
+  final MusicEntites music;
+
+  const MusicPlayingNowState({required this.music});
+}
+
+final class MusicLoadingNowState extends PlayingState {}
+
