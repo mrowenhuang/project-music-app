@@ -13,6 +13,7 @@ class HomePages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AudioPlayer _audioPlayer = AudioPlayer();
+    int? _playingSongId;
 
     return Scaffold(
       backgroundColor: AppColor.secondary,
@@ -98,7 +99,7 @@ class HomePages extends StatelessWidget {
                                             maxRadius: 50,
                                             backgroundColor: AppColor.secondary,
                                             backgroundImage: NetworkImage(
-                                              state.music.poster.toString(),
+                                              state.music[0].poster.toString(),
                                             ),
                                             child: Center(
                                               child: CircleAvatar(
@@ -110,7 +111,7 @@ class HomePages extends StatelessWidget {
                                         ),
                                         SizedBox(height: 10),
                                         Text(
-                                          state.music.title.toString(),
+                                          state.music[0].title.toString(),
                                           style: TextStyle(fontSize: 12),
                                         ),
                                         SizedBox(height: 10),
@@ -118,41 +119,45 @@ class HomePages extends StatelessWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
+                                            state.music.length > 1
+                                                ? GestureDetector(
+                                                  onTap: () {
+                                                    print("back");
+                                                  },
+                                                  child: Icon(
+                                                    Icons.skip_previous_rounded,
+                                                    size: 30,
+                                                  ),
+                                                )
+                                                : SizedBox(),
                                             GestureDetector(
                                               onTap: () {
-                                                print("back");
-                                              },
-                                              child: Icon(
-                                                Icons.skip_previous_rounded,
-                                                size: 30,
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                state.music.playing!
+                                                state.music[0].playing!
                                                     ? _audioPlayer.pause()
                                                     : _audioPlayer.play();
 
                                                 context
                                                     .read<PlayingCubit>()
-                                                    .playing(state.music);
+                                                    .playing(state.music[0]);
                                               },
                                               child: Icon(
-                                                state.music.playing!
+                                                state.music[0].playing!
                                                     ? Icons.pause_rounded
                                                     : Icons.play_arrow_rounded,
                                                 size: 30,
                                               ),
                                             ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                print("next");
-                                              },
-                                              child: Icon(
-                                                Icons.skip_next_rounded,
-                                                size: 30,
-                                              ),
-                                            ),
+                                            state.music.length > 1
+                                                ? GestureDetector(
+                                                  onTap: () {
+                                                    print("next");
+                                                  },
+                                                  child: Icon(
+                                                    Icons.skip_next_rounded,
+                                                    size: 30,
+                                                  ),
+                                                )
+                                                : SizedBox(),
                                           ],
                                         ),
                                       ],
@@ -253,7 +258,7 @@ class HomePages extends StatelessWidget {
                         SizedBox(height: 15),
 
                         SizedBox(
-                          width: 180,
+                          width: 160,
                           height: 200,
                           child: ListView.builder(
                             padding: EdgeInsets.zero,
@@ -330,7 +335,7 @@ class HomePages extends StatelessWidget {
                 Expanded(
                   child: BlocBuilder<PlayingCubit, PlayingState>(
                     bloc: context.read<PlayingCubit>(),
-                    builder: (context, playingstate) {
+                    builder: (context, pstate) {
                       return BlocBuilder<MusicBloc, MusicState>(
                         bloc: context.read<MusicBloc>(),
                         builder: (context, state) {
@@ -350,10 +355,15 @@ class HomePages extends StatelessWidget {
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 10,
-                                    childAspectRatio: .9,
+                                    childAspectRatio: .85,
                                   ),
                               itemBuilder: (context, index) {
                                 final data = state.music[index];
+                                if (pstate is MusicPlayingNowState) {
+                                  if (data.title != pstate.music[0].title) {
+                                    data.playing = null;
+                                  }
+                                }
                                 return Container(
                                   padding: EdgeInsets.all(15),
                                   decoration: BoxDecoration(
@@ -392,7 +402,7 @@ class HomePages extends StatelessWidget {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
-                                                width: 110,
+                                                width: 100,
                                                 child: Text(
                                                   data.title.toString(),
                                                   maxLines: 1,
@@ -415,14 +425,13 @@ class HomePages extends StatelessWidget {
                                             ],
                                           ),
                                           GestureDetector(
-                                            // ! masalah tinggal kalau pindah lagu icon paused tidak berubah menjadi play
                                             onTap: () {
                                               if (data.playing == true) {
                                                 context
                                                     .read<PlayingCubit>()
                                                     .playing(data);
                                                 _audioPlayer.pause();
-                                              } else {
+                                              } else if (data.playing == null) {
                                                 context
                                                     .read<PlayingCubit>()
                                                     .playing(data);
@@ -442,6 +451,11 @@ class HomePages extends StatelessWidget {
                                                     ),
                                                   ),
                                                 );
+                                                _audioPlayer.play();
+                                              } else {
+                                                context
+                                                    .read<PlayingCubit>()
+                                                    .playing(data);
                                                 _audioPlayer.play();
                                               }
                                             },
@@ -498,72 +512,155 @@ class HomePages extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Row(
-                  children: [
-                    Material(
-                      elevation: 3,
-                      borderRadius: BorderRadius.circular(50),
-                      child: CircleAvatar(
-                        maxRadius: 30,
-                        backgroundColor: AppColor.secondary,
-                        backgroundImage: NetworkImage(
-                          'https://picsum.photos/id/130/200/300',
-                        ),
-                        child: Center(
+                child: BlocBuilder<PlayingCubit, PlayingState>(
+                  bloc: context.read<PlayingCubit>(),
+                  builder: (context, state) {
+                    if (state is MusicPlayingNowState) {
+                      return Row(
+                        children: [
+                          Material(
+                            elevation: 3,
+                            borderRadius: BorderRadius.circular(50),
+                            child: CircleAvatar(
+                              maxRadius: 30,
+                              backgroundColor: AppColor.secondary,
+                              backgroundImage: NetworkImage(
+                                state.music[0].poster!,
+                              ),
+                              child: Center(
+                                child: CircleAvatar(
+                                  maxRadius: 10,
+                                  backgroundColor: AppColor.third,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                state.music[0].title!,
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                state.music[0].artist!,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.black45,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              print("shiffel");
+                            },
+                            child: Icon(Icons.shuffle, size: 30),
+                          ),
+                          SizedBox(width: 10),
+
+                          GestureDetector(
+                            onTap: () {
+                              print("back");
+                            },
+                            child: Icon(Icons.skip_previous_rounded, size: 40),
+                          ),
+                          SizedBox(width: 10),
+
+                          GestureDetector(
+                            onTap: () {
+                              print("play");
+                            },
+                            child: Icon(Icons.play_arrow_rounded, size: 40),
+                          ),
+                          SizedBox(width: 10),
+
+                          GestureDetector(
+                            onTap: () {
+                              print("next");
+                            },
+                            child: Icon(Icons.skip_next_rounded, size: 40),
+                          ),
+
+                          Spacer(),
+                        ],
+                      );
+                    }
+                    return Row(
+                      children: [
+                        Material(
+                          elevation: 3,
+                          borderRadius: BorderRadius.circular(50),
                           child: CircleAvatar(
-                            maxRadius: 10,
-                            backgroundColor: AppColor.third,
+                            maxRadius: 30,
+                            backgroundColor: AppColor.secondary,
+                            backgroundImage: NetworkImage(
+                              'https://picsum.photos/id/130/200/300',
+                            ),
+                            child: Center(
+                              child: CircleAvatar(
+                                maxRadius: 10,
+                                backgroundColor: AppColor.third,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Music Title', style: TextStyle(fontSize: 12)),
-                        SizedBox(height: 5),
-                        Text(
-                          'Actrees',
-                          style: TextStyle(fontSize: 10, color: Colors.black45),
+                        SizedBox(width: 15),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Music Title', style: TextStyle(fontSize: 12)),
+                            SizedBox(height: 5),
+                            Text(
+                              'Actrees',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.black45,
+                              ),
+                            ),
+                          ],
                         ),
+                        Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            print("shiffel");
+                          },
+                          child: Icon(Icons.shuffle, size: 30),
+                        ),
+                        SizedBox(width: 10),
+
+                        GestureDetector(
+                          onTap: () {
+                            print("back");
+                          },
+                          child: Icon(Icons.skip_previous_rounded, size: 40),
+                        ),
+                        SizedBox(width: 10),
+
+                        GestureDetector(
+                          onTap: () {
+                            print("play");
+                          },
+                          child: Icon(Icons.play_arrow_rounded, size: 40),
+                        ),
+                        SizedBox(width: 10),
+
+                        GestureDetector(
+                          onTap: () {
+                            print("next");
+                          },
+                          child: Icon(Icons.skip_next_rounded, size: 40),
+                        ),
+
+                        Spacer(),
                       ],
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        print("shiffel");
-                      },
-                      child: Icon(Icons.shuffle, size: 30),
-                    ),
-                    SizedBox(width: 10),
-
-                    GestureDetector(
-                      onTap: () {
-                        print("back");
-                      },
-                      child: Icon(Icons.skip_previous_rounded, size: 40),
-                    ),
-                    SizedBox(width: 10),
-
-                    GestureDetector(
-                      onTap: () {
-                        print("play");
-                      },
-                      child: Icon(Icons.play_arrow_rounded, size: 40),
-                    ),
-                    SizedBox(width: 10),
-
-                    GestureDetector(
-                      onTap: () {
-                        print("next");
-                      },
-                      child: Icon(Icons.skip_next_rounded, size: 40),
-                    ),
-
-                    Spacer(),
-                  ],
+                    );
+                  },
                 ),
               ),
             ),

@@ -7,17 +7,18 @@ part 'playing_state.dart';
 class PlayingCubit extends Cubit<PlayingState> {
   PlayingCubit() : super(PlayingInitial());
 
+  
+
   void playing(MusicEntites music) {
     emit(MusicLoadingNowState());
 
     if (music.playing == null) {
+
       music.playing = true;
-      print(music.title);
-      emit(MusicPlayingNowState(music: music));
+      emit(MusicPlayingNowState(music: [music]));
     } else {
       music.playing = !music.playing!;
-      print(music.title);
-      emit(MusicPlayingNowState(music: music));
+      emit(MusicPlayingNowState(music: [music]));
     }
   }
 }

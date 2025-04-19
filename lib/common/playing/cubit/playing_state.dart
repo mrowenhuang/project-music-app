@@ -10,7 +10,7 @@ sealed class PlayingState extends Equatable {
 final class PlayingInitial extends PlayingState {}
 
 final class MusicPlayingNowState extends PlayingState {
-  final MusicEntites music;
+  final List<MusicEntites> music;
 
   const MusicPlayingNowState({required this.music});
 }
