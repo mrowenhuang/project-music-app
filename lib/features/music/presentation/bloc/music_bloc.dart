@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_music_app/features/music/domain/entities/music_entites.dart';
 import 'package:flutter_music_app/features/music/domain/usecases/device_music_get.dart';
 import 'package:flutter_music_app/features/music/domain/usecases/music_get.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 
 part 'music_event.dart';
 part 'music_state.dart';
@@ -23,7 +22,7 @@ class MusicBloc extends Bloc<MusicEvent, MusicState> {
     GetOnlineMusicEvent event,
     Emitter<MusicState> emit,
   ) async {
-    emit(LoadingGetOnlineMusicState());
+    emit(LoadingGetMusicState());
     final response = await _musicGet.call();
 
     response.fold(
@@ -40,12 +39,13 @@ class MusicBloc extends Bloc<MusicEvent, MusicState> {
     GetOfflineMusicEvent event,
     Emitter<MusicState> emit,
   ) async {
-    emit(LoadingGetOfflineMusicState());
+    emit(LoadingGetMusicState());
 
     final response = await _deviceMusicGet.call();
 
     response.fold(
       (failure) {
+        print(failure.failure);
         emit(FailedGetOfflineMusicState(failure: failure.toString()));
       },
       (response) {

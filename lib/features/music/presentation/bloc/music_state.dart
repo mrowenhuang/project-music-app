@@ -28,7 +28,7 @@ class FailedGetOnlineMusicState extends MusicState {
 // ^ Offline music
 
 class SuccesGetOfflineMusicState extends MusicState {
-  final List<SongModel> music;
+  final List<MusicEntites> music;
 
   const SuccesGetOfflineMusicState({required this.music});
 }
@@ -40,3 +40,8 @@ class FailedGetOfflineMusicState extends MusicState {
 
   const FailedGetOfflineMusicState({required this.failure});
 }
+
+
+// ^ universal loading 
+
+class LoadingGetMusicState extends MusicState {}

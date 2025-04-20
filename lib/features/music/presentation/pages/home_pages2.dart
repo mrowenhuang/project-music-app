@@ -41,7 +41,7 @@ class _HomePages2State extends State<HomePages2> {
               controller: urlC,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: "Url",
+                hintText: "data",
               ),
             ),
             TextField(

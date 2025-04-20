@@ -5,14 +5,20 @@ class Cont {
 
   Future addData(
     String title,
-    String? url,
+    String? data,
     String poster,
     String artist,
   ) async {
-    CollectionReference music = FirebaseFirestore.instance.collection('music');
+    CollectionReference music = FirebaseFirestore.instance.collection('musics');
 
-    music
-        .add({"artist": artist, "title": title, "poster": poster, 'url': url})
+    await music
+        .add({
+          "_id": DateTime.now().toIso8601String(),
+          "artist": artist,
+          "title": title,
+          "poster": poster,
+          '_data': data,
+        })
         .then((value) {
           print('user added');
         })

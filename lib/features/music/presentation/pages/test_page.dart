@@ -7,11 +7,14 @@ class TestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: Center(
-        child: ElevatedButton(onPressed: () async{
-          // await MusicRemoteDatasourceImpl(firestore: FirebaseFirestore.instance).getMusic();
-        }, child: Text("data")),
+        child: ElevatedButton(
+          onPressed: () async {
+            await MusicRemoteDatasourceImpl().getPlaylist();
+          },
+          child: Text("data"),
+        ),
       ),
     );
   }

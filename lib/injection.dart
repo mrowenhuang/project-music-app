@@ -6,7 +6,12 @@ import 'package:flutter_music_app/features/music/data/repositories/music_reposit
 import 'package:flutter_music_app/features/music/domain/repositories/music_repositories.dart';
 import 'package:flutter_music_app/features/music/domain/usecases/device_music_get.dart';
 import 'package:flutter_music_app/features/music/domain/usecases/music_get.dart';
+import 'package:flutter_music_app/features/music/domain/usecases/music_to_playlist_add.dart';
+import 'package:flutter_music_app/features/music/domain/usecases/playlist_music_add.dart';
+import 'package:flutter_music_app/features/music/domain/usecases/playlist_music_delete.dart';
+import 'package:flutter_music_app/features/music/domain/usecases/playlist_music_get.dart';
 import 'package:flutter_music_app/features/music/presentation/bloc/music_bloc.dart';
+import 'package:flutter_music_app/features/music/presentation/bloc/playlist_bloc/playlist_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -18,6 +23,7 @@ Future<void> initializeDependecies() async {
 
   sl.registerFactory(() => MusicBloc(sl(), sl()));
   sl.registerFactory(() => PlayingCubit());
+  sl.registerFactory(() => PlaylistBloc(sl(), sl(),sl(),sl()));
 
   sl.registerLazySingleton<MusicRemoteDatasource>(
     () => MusicRemoteDatasourceImpl(),
@@ -29,4 +35,8 @@ Future<void> initializeDependecies() async {
 
   sl.registerLazySingleton(() => MusicGet(sl()));
   sl.registerLazySingleton(() => DeviceMusicGet(sl()));
+  sl.registerLazySingleton(() => PlaylistMusicAdd(sl()));
+  sl.registerLazySingleton(() => PlaylistMusicGet(sl()));
+  sl.registerLazySingleton(() => PlaylistMusicDelete(sl()));
+  sl.registerLazySingleton(() => MusicToPlaylistAdd(sl()));
 }
