@@ -50,55 +50,82 @@ class HomePages extends StatelessWidget {
                   children: [
                     musicPlayingBox(context, audioPlayer),
                     SizedBox(width: 18),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Playlist Music', style: TextStyle(fontSize: 16)),
-                        SizedBox(height: 15),
-                        SizedBox(
-                          width: 160,
-                          height: 200,
-                          child: ListView.builder(
-                            padding: EdgeInsets.zero,
-                            itemCount: 3,
-                            physics: BouncingScrollPhysics(),
+                    BlocBuilder<PlayingCubit, PlayingState>(
+                      bloc: context.read<PlayingCubit>(),
+                      builder: (context, state) {
+                        if (state is MuicPlayingPlaylistNowState) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Playlist ${state.playlist.playlistName}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(height: 15),
+                              SizedBox(
+                                width: 160,
+                                height: 200,
+                                child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  itemCount: state.playlist.listMusic!.length,
+                                  physics: BouncingScrollPhysics(),
 
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(bottom: 10),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  height: 50,
-                                  width: 180,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: AppColor.secondary,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black38,
-                                        offset: Offset(0, 4),
-                                        blurRadius: 4,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        (index + 1).toString(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
+                                  itemBuilder: (context, index) {
+                                    final data =
+                                        state.playlist.listMusic![index];
+                                    return Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                        ),
+                                        height: 50,
+                                        width: 180,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          color: AppColor.secondary,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black38,
+                                              offset: Offset(0, 4),
+                                              blurRadius: 4,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                data.title.toString(),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ),
+                                            Text(
+                                              (index + 1).toString(),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+                              ),
+                            ],
+                          );
+                        }
+                        return Text(
+                          'No Playlist Playing',
+                          style: TextStyle(fontSize: 16),
+                        );
+                      },
                     ),
                   ],
                 ),

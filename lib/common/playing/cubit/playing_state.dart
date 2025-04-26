@@ -15,5 +15,16 @@ final class MusicPlayingNowState extends PlayingState {
   const MusicPlayingNowState({required this.music});
 }
 
-final class MusicLoadingNowState extends PlayingState {}
+final class MuicPlayingPlaylistNowState extends PlayingState {
+  final PlaylistEntites playlist;
+  // final ConcatenatingAudioSource musicPlaylist;
+  final int index;
 
+  const MuicPlayingPlaylistNowState({
+    required this.index,
+    required this.playlist,
+    // required this.musicPlaylist,
+  });
+}
+
+final class MusicLoadingNowState extends PlayingState {}

@@ -105,6 +105,7 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     Emitter<PlaylistState> emit,
   ) async {
     emit(LoadingPlaylistState());
+
     final response = await _musicToPlaylistAdd.call(event.id, event.music);
 
     await response.fold(
@@ -114,7 +115,6 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
       (response) async {
         emit(SuccesAddMusicToPlaylistState(message: response));
         final data = await _playlistMusicGet.call();
-
         data.fold(
           (failure) {
             emit(FailedGetPlaylistState(failure: failure.failure));

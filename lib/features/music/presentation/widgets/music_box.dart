@@ -1,5 +1,4 @@
 import 'package:another_flushbar/flushbar.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -167,7 +166,37 @@ Widget musicBox(
                         ),
                         SizedBox(height: 10),
                         Expanded(
-                          child: BlocBuilder<PlaylistBloc, PlaylistState>(
+                          child: BlocConsumer<PlaylistBloc, PlaylistState>(
+                            listener: (context, state) {
+                              if (state is SuccesDeletePlaylistState) {
+                                Flushbar(
+                                  message: "Success Delete Playlist",
+                                  duration: const Duration(seconds: 2),
+                                  backgroundColor: Colors.green,
+                                  margin: const EdgeInsets.all(8),
+                                  borderRadius: BorderRadius.circular(10),
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  icon: const Icon(
+                                    Icons.error_outline,
+                                    color: Colors.white,
+                                  ),
+                                ).show(context);
+                              } else if (state
+                                  is SuccesAddMusicToPlaylistState) {
+                                Flushbar(
+                                  message: "Success Add Music to Playlist",
+                                  duration: const Duration(seconds: 2),
+                                  backgroundColor: Colors.green,
+                                  margin: const EdgeInsets.all(8),
+                                  borderRadius: BorderRadius.circular(10),
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  icon: const Icon(
+                                    Icons.error_outline,
+                                    color: Colors.white,
+                                  ),
+                                ).show(context);
+                              }
+                            },
                             bloc: context.read<PlaylistBloc>(),
                             builder: (context, state) {
                               if (state is LoadingPlaylistState) {
@@ -189,6 +218,7 @@ Widget musicBox(
                                       itemCount: state.palylist.length,
                                       itemBuilder: (context, index) {
                                         final data = state.palylist[index];
+
                                         return GestureDetector(
                                           onTap: () {
                                             showModalBottomSheet(
@@ -272,9 +302,13 @@ Widget musicBox(
                                                           ),
                                                           ElevatedButton.icon(
                                                             onPressed: () {
-                                                              print(
-                                                                state.palylist,
-                                                              );
+                                                              context
+                                                                  .read<
+                                                                    PlayingCubit
+                                                                  >()
+                                                                  .playingPlaylist(
+                                                                    data, 0
+                                                                  );
                                                             },
                                                             icon: Icon(
                                                               Icons
@@ -312,6 +346,9 @@ Widget musicBox(
                                                                           as MusicModels,
                                                                 ),
                                                               );
+                                                              Navigator.pop(
+                                                                context,
+                                                              );
                                                             },
                                                             icon: Icon(
                                                               Icons.add,
@@ -337,6 +374,7 @@ Widget musicBox(
                                                           ),
                                                         ],
                                                       ),
+
                                                       // ! masalah di sini di add data tidak di refresh
                                                       Expanded(
                                                         child:
@@ -349,10 +387,13 @@ Widget musicBox(
                                                                   ),
                                                                 )
                                                                 : ListView.builder(
+                                                                  physics:
+                                                                      BouncingScrollPhysics(),
                                                                   itemCount:
                                                                       data
                                                                           .listMusic!
                                                                           .length,
+
                                                                   itemBuilder: (
                                                                     context,
                                                                     index,
@@ -360,6 +401,12 @@ Widget musicBox(
                                                                     final value =
                                                                         data.listMusic![index];
 
+                                                                    if (state
+                                                                        is LoadingPlaylistState) {
+                                                                      print(
+                                                                        "loading dari listtile",
+                                                                      );
+                                                                    }
                                                                     return ListTile(
                                                                       title: Text(
                                                                         value

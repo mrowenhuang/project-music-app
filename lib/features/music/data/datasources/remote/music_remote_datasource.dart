@@ -95,12 +95,19 @@ class MusicRemoteDatasourceImpl implements MusicRemoteDatasource {
       await coll.get().then((value) async {
         for (var data in value.docs) {
           if ((data.data() as Map<String, dynamic>)['id'] == id) {
-            for (var element
-                in (data.data() as Map<String, dynamic>)['list_music']) {
-              if (element['_id'] != music.id) {
-                await coll.doc(data.id).update({
-                  'list_music': FieldValue.arrayUnion([music.toMap()]),
-                });
+            if (((data.data() as Map<String, dynamic>)['list_music'] as List)
+                .isEmpty) {
+              await coll.doc(data.id).update({
+                'list_music': FieldValue.arrayUnion([music.toMap()]),
+              });
+            } else {
+              for (var element
+                  in (data.data() as Map<String, dynamic>)['list_music']) {
+                if (element['_id'] != music.id || true) {
+                  await coll.doc(data.id).update({
+                    'list_music': FieldValue.arrayUnion([music.toMap()]),
+                  });
+                }
               }
             }
           }

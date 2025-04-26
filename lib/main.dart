@@ -6,8 +6,6 @@ import 'package:flutter_music_app/core/configs/app_theme.dart';
 import 'package:flutter_music_app/features/music/presentation/bloc/music_bloc.dart';
 import 'package:flutter_music_app/features/music/presentation/bloc/playlist_bloc/playlist_bloc.dart';
 import 'package:flutter_music_app/features/music/presentation/pages/home_pages.dart';
-import 'package:flutter_music_app/features/music/presentation/pages/home_pages2.dart';
-import 'package:flutter_music_app/features/music/presentation/pages/test_page.dart';
 import 'package:flutter_music_app/injection.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 
