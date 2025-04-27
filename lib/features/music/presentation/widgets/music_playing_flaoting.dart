@@ -48,7 +48,7 @@ Widget musicPlayingFloating(BuildContext context, AudioPlayer audioPlayer) {
                             maxRadius: 30,
                             backgroundColor: AppColor.secondary,
                             backgroundImage: NetworkImage(
-                              state.music[0].poster!,
+                              state.music[0].poster.toString(),
                             ),
                             child: Center(
                               child: CircleAvatar(
@@ -92,31 +92,8 @@ Widget musicPlayingFloating(BuildContext context, AudioPlayer audioPlayer) {
                   ],
                 ),
                 Spacer(),
-                state.music.length > 1
-                    ? GestureDetector(
-                      onTap: () {
-                        print("shiffel");
-                      },
-                      child: Icon(Icons.shuffle, size: 30),
-                    )
-                    : SizedBox(),
-                SizedBox(width: 10),
-                state.music.length > 1
-                    ? GestureDetector(
-                      onTap: () {
-                        print("back");
-                      },
-                      child: Icon(Icons.skip_previous_rounded, size: 40),
-                    )
-                    : SizedBox(),
-                SizedBox(width: 10),
-
                 GestureDetector(
                   onTap: () {
-                    state.music[0].playing!
-                        ? audioPlayer.pause()
-                        : audioPlayer.play();
-
                     context.read<PlayingCubit>().playing(state.music[0]);
                   },
                   child: Icon(
@@ -126,16 +103,105 @@ Widget musicPlayingFloating(BuildContext context, AudioPlayer audioPlayer) {
                     size: 30,
                   ),
                 ),
-
-                state.music.length > 1
-                    ? GestureDetector(
-                      onTap: () {
-                        print("next");
-                      },
-                      child: Icon(Icons.skip_next_rounded, size: 40),
-                    )
-                    : SizedBox(),
-
+                Spacer(),
+              ],
+            );
+          } else if (state is MusicPlayingPlaylistNowState) {
+            return Row(
+              children: [
+                Material(
+                  elevation: 3,
+                  borderRadius: BorderRadius.circular(50),
+                  child:
+                      state.playlist.listMusic![state.index].poster == null
+                          ? CircleAvatar(
+                            maxRadius: 30,
+                            backgroundColor: AppColor.secondary,
+                            child: Center(
+                              child: CircleAvatar(
+                                maxRadius: 10,
+                                backgroundImage: AssetImage(
+                                  "assets/images/music.png",
+                                ),
+                              ),
+                            ),
+                          )
+                          : CircleAvatar(
+                            maxRadius: 30,
+                            backgroundColor: AppColor.secondary,
+                            backgroundImage: NetworkImage(
+                              state.playlist.listMusic![state.index].poster
+                                  .toString(),
+                            ),
+                            child: Center(
+                              child: CircleAvatar(
+                                maxRadius: 10,
+                                backgroundImage: AssetImage(
+                                  "assets/images/music.png",
+                                ),
+                              ),
+                            ),
+                          ),
+                ),
+                SizedBox(width: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      height: 15,
+                      child: Marquee(
+                        text:
+                            state.playlist.listMusic![state.index].title
+                                .toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: 12,
+                        ),
+                        scrollAxis: Axis.horizontal,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        blankSpace: 60.0,
+                        velocity: 30.0,
+                        startPadding: 10.0,
+                        accelerationCurve: Curves.linear,
+                        decelerationCurve: Curves.easeOut,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      state.playlist.listMusic![state.index].artist.toString(),
+                      style: TextStyle(fontSize: 10, color: Colors.black45),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                GestureDetector(
+                  onTap: () async {
+                    context.read<PlayingCubit>().prevSong();
+                  },
+                  child: Icon(Icons.skip_previous_rounded, size: 40),
+                ),
+                SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () async {
+                    context.read<PlayingCubit>().togglePlayMusic();
+                  },
+                  child: Icon(
+                    state.playlist.listMusic![state.index].playing!
+                        ? Icons.pause_rounded
+                        : Icons.play_arrow_rounded,
+                    size: 30,
+                  ),
+                ),
+                SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    context.read<PlayingCubit>().nextSong();
+                  },
+                  child: Icon(Icons.skip_next_rounded, size: 40),
+                ),
                 Spacer(),
               ],
             );

@@ -45,7 +45,6 @@ class MusicBloc extends Bloc<MusicEvent, MusicState> {
 
     response.fold(
       (failure) {
-        print(failure.failure);
         emit(FailedGetOfflineMusicState(failure: failure.toString()));
       },
       (response) {

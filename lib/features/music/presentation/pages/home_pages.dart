@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_music_app/common/playing/cubit/playing_cubit.dart';
 import 'package:flutter_music_app/core/configs/app_color.dart';
+import 'package:flutter_music_app/core/navigation/app_navigation.dart';
 import 'package:flutter_music_app/features/music/presentation/bloc/music_bloc.dart';
+import 'package:flutter_music_app/features/music/presentation/pages/search/search_pages.dart';
 import 'package:flutter_music_app/features/music/presentation/widgets/music_box.dart';
 import 'package:flutter_music_app/features/music/presentation/widgets/music_playing_box.dart';
 import 'package:flutter_music_app/features/music/presentation/widgets/music_playing_flaoting.dart';
+import 'package:flutter_music_app/features/music/presentation/widgets/playlist_bottom_sheet.dart';
+import 'package:flutter_music_app/injection.dart';
 import 'package:just_audio/just_audio.dart';
 
 class HomePages extends StatelessWidget {
@@ -14,7 +18,7 @@ class HomePages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AudioPlayer audioPlayer = AudioPlayer();
+    final AudioPlayer audioPlayer = sl<AudioPlayer>();
     final TextEditingController playlistNameC = TextEditingController();
     return Scaffold(
       backgroundColor: AppColor.secondary,
@@ -25,22 +29,39 @@ class HomePages extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Material(
-                  elevation: 5,
-                  borderRadius: BorderRadius.circular(10),
-                  child: TextField(
-                    cursorColor: AppColor.third,
-                    decoration: InputDecoration(
-                      hintText: "Search",
-                      suffixIcon: Icon(
-                        Icons.search,
-                        color: AppColor.third,
-                        size: 30,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                GestureDetector(
+                  onTap: () {
+                    AppNavigation.push(context, SearchPages());
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 55,
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: AppColor.secondary,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 4,
+                          color: Colors.black45,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Search",
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Icon(Icons.search, color: AppColor.third, size: 30),
+                      ],
                     ),
                   ),
                 ),
@@ -48,12 +69,12 @@ class HomePages extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    musicPlayingBox(context, audioPlayer),
-                    SizedBox(width: 18),
+                    musicPlayingBox(context, audioPlayer, playlistNameC),
+                    SizedBox(width: 14),
                     BlocBuilder<PlayingCubit, PlayingState>(
                       bloc: context.read<PlayingCubit>(),
                       builder: (context, state) {
-                        if (state is MuicPlayingPlaylistNowState) {
+                        if (state is MusicPlayingPlaylistNowState) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -66,7 +87,11 @@ class HomePages extends StatelessWidget {
                                 width: 160,
                                 height: 200,
                                 child: ListView.builder(
-                                  padding: EdgeInsets.zero,
+                                  padding: EdgeInsets.only(
+                                    top: 0,
+                                    left: 4,
+                                    right: 4,
+                                  ),
                                   itemCount: state.playlist.listMusic!.length,
                                   physics: BouncingScrollPhysics(),
 
@@ -129,6 +154,7 @@ class HomePages extends StatelessWidget {
                     ),
                   ],
                 ),
+                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -138,7 +164,15 @@ class HomePages extends StatelessWidget {
                         "Playlist",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        playlistBottomSheet(
+                          context,
+                          null,
+                          playlistNameC,
+                          true,
+                          audioPlayer,
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColor.third,
 

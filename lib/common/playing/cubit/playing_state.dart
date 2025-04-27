@@ -15,12 +15,13 @@ final class MusicPlayingNowState extends PlayingState {
   const MusicPlayingNowState({required this.music});
 }
 
-final class MuicPlayingPlaylistNowState extends PlayingState {
+// ignore: must_be_immutable
+final class MusicPlayingPlaylistNowState extends PlayingState {
   final PlaylistEntites playlist;
   // final ConcatenatingAudioSource musicPlaylist;
-  final int index;
+  int index;
 
-  const MuicPlayingPlaylistNowState({
+  MusicPlayingPlaylistNowState({
     required this.index,
     required this.playlist,
     // required this.musicPlaylist,

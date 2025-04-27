@@ -45,3 +45,4 @@ class FailedGetOfflineMusicState extends MusicState {
 // ^ universal loading 
 
 class LoadingGetMusicState extends MusicState {}
+

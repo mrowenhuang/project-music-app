@@ -10,3 +10,4 @@ abstract class MusicEvent extends Equatable {
 final class GetOnlineMusicEvent extends MusicEvent {}
 
 final class GetOfflineMusicEvent extends MusicEvent {}
+
