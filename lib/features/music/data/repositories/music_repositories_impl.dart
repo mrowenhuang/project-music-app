@@ -27,13 +27,16 @@ class MusicRepositoriesImpl implements MusicRepositories {
   @override
   Future<Either<ServerFailure, List<MusicEntites>>> getDeviceMusic() async {
     try {
-      if (await Permission.audio.isGranted) {
+      if (await Permission.audio.isGranted ||
+          await Permission.storage.isGranted) {
         final List<SongModel> response = await _onAudioQuery.querySongs();
         final List<MusicEntites> data =
             response.map((e) => MusicModels.fromSongModel(e)).toList();
 
         return right(data);
-      } else if (await Permission.audio.isGranted) {
+      } else if (await Permission.audio.isDenied ||
+          await Permission.storage.isDenied) {
+        await Permission.storage.request();
         await Permission.audio.request();
         final List<SongModel> response = await _onAudioQuery.querySongs();
         final List<MusicEntites> data =

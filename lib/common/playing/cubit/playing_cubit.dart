@@ -29,7 +29,10 @@ class PlayingCubit extends Cubit<PlayingState> {
 
     final clickedUri = music.data.toString();
 
-    if (currentUri == clickedUri) {
+    // print("current ${}");
+    // print("current click $clickedUri");
+
+    if (Uri.decodeFull(currentUri.toString()) == clickedUri) {
       if (audioPlayer.playing) {
         music.playing = false;
         emit(MusicLoadingNowState());

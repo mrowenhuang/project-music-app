@@ -21,7 +21,6 @@ final sl = GetIt.instance;
 Future<void> initializeDependecies() async {
   sl.registerLazySingleton(() => OnAudioQuery());
   sl.registerLazySingleton(() => AudioPlayer());
-  // sl.registerLazySingleton(() => FirebaseFirestore.instance);
 
   sl.registerFactory(() => MusicBloc(sl(), sl()));
   sl.registerFactory(() => PlayingCubit());
