@@ -17,6 +17,8 @@ class PlayingCubit extends Cubit<PlayingState> {
         music.playing = false;
         emit(MusicLoadingNowState());
         emit(MusicPlayingNowState(music: [music]));
+
+        print("janaln");
         await audioPlayer.pause();
       }
     });
@@ -76,6 +78,7 @@ class PlayingCubit extends Cubit<PlayingState> {
 
     audioPlayer.currentIndexStream.listen((currentIndex) {
       if (currentIndex != null && currentIndex != index) {
+        print('number $currentIndex');
         nextSong();
       }
     });
@@ -142,6 +145,7 @@ class PlayingCubit extends Cubit<PlayingState> {
   }
 
   void nextSong() async {
+    print("jalan");
     if (state is MusicPlayingPlaylistNowState) {
       final currentState = state as MusicPlayingPlaylistNowState;
       final playlist = currentState.playlist;
